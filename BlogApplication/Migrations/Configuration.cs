@@ -18,11 +18,10 @@ namespace BlogApplication.Migrations
         protected override void Seed(Models.ApplicationDbContext context)
         {
             // Classes to work with users and roles (provided by Microsoft packages)
-            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+
+            RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             
 
-            //Check if the roles are already created.
-            //If not, create them.
             if (!context.Roles.Any(r => r.Name == "Admin"))
             {
                 roleManager.Create(new IdentityRole { Name = "Admin" });
@@ -33,36 +32,57 @@ namespace BlogApplication.Migrations
                 roleManager.Create(new IdentityRole { Name = "Moderator" });
             }
 
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+            UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
-            if (!context.Users.Any(p => p.UserName == "veris@naver.com"))
+            ApplicationUser adminUser = null;
+
+            if (!context.Users.Any(p => p.UserName == "admin@myblogapp.com"))
             {
-                userManager.Create(new ApplicationUser
-                {
-                    UserName = "veris@naver.com",
-                    Email = "veris@naver.com",
-                    FirstName = "YoungSeok",
-                    LastName = "Ahn",
-                    DisplayName = "YoungSeok-Ahn",
-                }, "Aysmkilt10@");
+                adminUser = new ApplicationUser();
+                adminUser.UserName = "admin@myblogapp.com";
+                adminUser.Email = "admin@myblogapp.com";
+                adminUser.FirstName = "Admin";
+                adminUser.LastName = "User";
+                adminUser.DisplayName = "Admin User";
+
+                userManager.Create(adminUser, "blogAdmin-1");
             }
-            if (!context.Users.Any(p => p.UserName == "veris1975@outlook.com"))
+            else
             {
-                userManager.Create(new ApplicationUser
-                {
-                    UserName = "veris1975@outlook.com",
-                    Email = "veris1975@outlook.com",
-                    FirstName = "YS",
-                    LastName = "A",
-                    DisplayName = "YS-A",
-                }, "Aysmkilt10@");
+                adminUser = context.Users.Where(p => p.UserName == "admin@myblogapp.com")
+                    .FirstOrDefault();
             }
 
-            var adminId = userManager.FindByEmail("veris1975@outlook.com").Id;
-            userManager.AddToRole(adminId, "Admin");
+            if (!userManager.IsInRole(adminUser.Id, "Admin"))
+            {
+                userManager.AddToRole(adminUser.Id, "Admin");
+            }
 
-            var moderatorId = userManager.FindByEmail("veris@naver.com").Id;
-            userManager.AddToRole(moderatorId, "Moderator");
+            ApplicationUser moderatorUser = null;
+
+            if (!context.Users.Any(p => p.UserName == "moder@myblogapp.com"))
+            {
+                moderatorUser = new ApplicationUser();
+                moderatorUser.UserName = "moder@myblogapp.com";
+                moderatorUser.Email = "moder@myblogapp.com";
+                moderatorUser.FirstName = "Moderator";
+                moderatorUser.LastName = "User";
+                moderatorUser.DisplayName = "Moderator User";
+
+                userManager.Create(moderatorUser, "blogMeder-1");
+            }
+            else
+            {
+                moderatorUser = context.Users.Where(p => p.UserName == "moder@myblogapp.com")
+                    .FirstOrDefault();
+            }
+
+            if (!userManager.IsInRole(moderatorUser.Id, "Moderator"))
+            {
+                userManager.AddToRole(moderatorUser.Id, "Moderator");
+            }
+
+
         }
     }
 }
