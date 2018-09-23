@@ -48,12 +48,16 @@
             <td>
                 @Html.Raw(item.Body)
                 @Html.ActionLink("Detais", "Details", new { slug = item.Slug }) |
-                           
+
                 @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                 {
                     @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                } |
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
                     @Html.ActionLink("Delete", "Delete", new { id = item.Id })
                 }
+
             </td>
             <td>
                 @if (item.MediaUrl != null)

@@ -15,73 +15,51 @@ namespace BlogApplication.Migrations
             AutomaticMigrationsEnabled = true;
         }
 
-        protected override void Seed(Models.ApplicationDbContext context)
+        protected override void Seed(BlogApplication.Models.ApplicationDbContext context)
         {
-            // Classes to work with users and roles (provided by Microsoft packages)
-
-            RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
-            
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
             if (!context.Roles.Any(r => r.Name == "Admin"))
             {
                 roleManager.Create(new IdentityRole { Name = "Admin" });
             }
 
-            if (!context.Roles.Any(r => r.Name == "Moderator"))
+            if (!context.Roles.Any(r => r.Name == "Moder"))
             {
-                roleManager.Create(new IdentityRole { Name = "Moderator" });
+                roleManager.Create(new IdentityRole { Name = "Moder" });
             }
 
-            UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-
-            ApplicationUser adminUser = null;
-
-            if (!context.Users.Any(p => p.UserName == "admin@myblogapp.com"))
+            if (!context.Users.Any(p => p.Email == "veris49@gmail.com"))
             {
-                adminUser = new ApplicationUser();
-                adminUser.UserName = "admin@myblogapp.com";
-                adminUser.Email = "admin@myblogapp.com";
-                adminUser.FirstName = "Admin";
-                adminUser.LastName = "User";
-                adminUser.DisplayName = "Admin User";
-
-                userManager.Create(adminUser, "blogAdmin-1");
-            }
-            else
-            {
-                adminUser = context.Users.Where(p => p.UserName == "admin@myblogapp.com")
-                    .FirstOrDefault();
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = "veris49@gmail.com",
+                    Email = "veris49@gmail.com",
+                    FirstName = "YS",
+                    LastName = "Ahn",
+                    DisplayName = "YSA"
+                }, "Adminuser@1");
             }
 
-            if (!userManager.IsInRole(adminUser.Id, "Admin"))
+            if (!context.Users.Any(p => p.Email == "sophia1975@naver.com"))
             {
-                userManager.AddToRole(adminUser.Id, "Admin");
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = "sophia1975@naver.com",
+                    Email = "sophia1975@naver.com",
+                    FirstName = "Sophia",
+                    LastName = "Lee",
+                    DisplayName = "Sophie"
+                }, "Moders1234@");
             }
 
-            ApplicationUser moderatorUser = null;
+            var adminId = userManager.FindByEmail("veris49@gmail.com").Id;
+            userManager.AddToRole(adminId, "Admin");
 
-            if (!context.Users.Any(p => p.UserName == "moder@myblogapp.com"))
-            {
-                moderatorUser = new ApplicationUser();
-                moderatorUser.UserName = "moder@myblogapp.com";
-                moderatorUser.Email = "moder@myblogapp.com";
-                moderatorUser.FirstName = "Moderator";
-                moderatorUser.LastName = "User";
-                moderatorUser.DisplayName = "Moderator User";
 
-                userManager.Create(moderatorUser, "blogMeder-1");
-            }
-            else
-            {
-                moderatorUser = context.Users.Where(p => p.UserName == "moder@myblogapp.com")
-                    .FirstOrDefault();
-            }
-
-            if (!userManager.IsInRole(moderatorUser.Id, "Moderator"))
-            {
-                userManager.AddToRole(moderatorUser.Id, "Moderator");
-            }
-
+            var moderId = userManager.FindByEmail("sophia1975@naver.com").Id;
+            userManager.AddToRole(moderId, "Moder");
 
         }
     }

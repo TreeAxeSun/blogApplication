@@ -3,17 +3,17 @@
     ViewBag.Title = "Verify Phone Number";
 }
 
-<h2>@ViewBag.Title.</h2>
+<h2 style="color: gold">@ViewBag.Title.</h2>
 
 @using (Html.BeginForm("VerifyPhoneNumber", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     @Html.Hidden("phoneNumber", @Model.PhoneNumber)
-    <h4>Enter verification code</h4>
-    <h5>@ViewBag.Status</h5>
+    <h4 style="color: gold">Enter verification code</h4>
+    <h5 style="color: gold">@ViewBag.Status</h5>
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
-    <div class="form-group">
+    <div class="form-group" style="color: gold">
         @Html.LabelFor(m => m.Code, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
             @Html.TextBoxFor(m => m.Code, new { @class = "form-control" })

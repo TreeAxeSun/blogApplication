@@ -66,9 +66,9 @@
     </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+    <div>
+        <a href="@Url.Action("Index","BlogPosts")" class="btn btn-warning">Back to List</a>
+    </div>
 
 @section scripts{
 <script src="~/Scripts/tinymce/tinymce.min.js"></script>
