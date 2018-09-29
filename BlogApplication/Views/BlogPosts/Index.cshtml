@@ -1,84 +1,108 @@
-﻿@model IEnumerable<BlogApplication.Models.BlogPost>
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IEnumerable<BlogApplication.Models.BlogPost>
 
 @{
     ViewBag.Title = "Index";
+    var pagedList = (IPagedList)Model;
 }
 
 <h2 style="color:gold">Content List</h2>
 
-
-@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-{
-     <a href="@Url.Action("Create","BlogPosts")" class="btn btn-warning">CREATE NEW CONTENT</a>
-}
-
-
-<table class="table" style="background-color:azure;">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Created)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Updated)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Slug)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Published)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Body)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MediaUrl)
-        </th>
-    </tr>
-
-    @foreach (var item in Model)
+<div>
+    @using (Html.BeginForm())
     {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Created)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Updated)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Slug)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Published)
-        </td>
-        <td>
-            @Html.Raw(item.Body)
-            @Html.ActionLink("Detais", "Details", new { slug = item.Slug }) |
-
-            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-            {
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id })
-            } |
-            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-            {
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            }
-
-        </td>
-        <td>
-            @if (item.MediaUrl != null)
-            {
-                <img class="img-responsive" src="@item.MediaUrl" alt="" />
-            }
-        </td>
-    </tr>
+        <input type="text" class="form-control" name="searchString" placeholder="Search for posts" value="@ViewBag.SearchString" />
+        <input type="submit" class="btn btn-primary" value="Search" />
     }
+</div>
 
-</table>
+
+<div>
+    <table class="table" style="background-color:azure;">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Created)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Updated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Slug)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Published)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Body)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MediaUrl)
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Updated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Slug)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Published)
+                </td>
+                <td>
+                    @Html.Raw(item.Body)
+                    @Html.ActionLink("Details", "Details", new { slug = item.Slug }) |
+
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                    } |
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    }
+
+                </td>
+                <td>
+                    @if (item.MediaUrl != null)
+                    {
+                        <img class="img-responsive" src="@item.MediaUrl" alt="" />
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+
+<div>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        <a href="@Url.Action("Create","BlogPosts")" class="btn btn-warning">CREATE NEW CONTENT</a>
+    }
+</div>
+
+
+<div style="color: gold">
+    Page @(pagedList.PageCount < pagedList.PageNumber ? 0 : pagedList.PageNumber) of
+    @pagedList.PageCount
+    @Html.PagedListPager(pagedList, page => Url.Action("Index", new { page, ViewBag.SearchString }))
+</div>
+
+
+
 
 

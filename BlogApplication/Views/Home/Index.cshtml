@@ -1,9 +1,9 @@
-﻿@{
+﻿@model IEnumerable<BlogApplication.Models.BlogPost>
+
+@{
     ViewBag.Title = "Home Page";
     Layout = null;
 }
-
-@model IEnumerable<BlogApplication.Models.BlogPost>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +23,6 @@
 
     <!-- Custom CSS -->
     <link href="~/Content/blog-post.css" rel="stylesheet" />
-
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -51,9 +50,7 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li>
-                        <a href="BlogPosts">Blog Posts</a>
-                    </li>
+                    <li>@Html.ActionLink("BlogPosts", "Index", "BlogPosts")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>
@@ -72,7 +69,21 @@
         <hr />
         <div class="row" style="background-color: azure;">
             <!-- Blog Post Content Column -->
+            <div class="col-lg-2"></div>
             <div class="col-lg-8">
+                
+                @*<h1 style="color:darkblue"><strong>[NEW POST]</strong></h1>
+
+                <h3 class="post-title">TITLE: @Model.Last().Title</h3>
+                <p>@Model.Last().Updated</p>
+                <a href="@Url.Action("Details","BlogPosts", new { slug = Model.Last().Slug })" class="btn-group-lg">
+                    VIEW
+                </a>
+                <img class="img-thumbnail" src="@Model.Last().MediaUrl" alt="" />
+                <p class="post-subtitle"> SLUG: @Model.Last().Slug"</p>
+                
+                <hr />*@
+
 
                 @foreach (var item in Model)
                 {
@@ -81,56 +92,18 @@
                     <img class="img-thumbnail" src="@item.MediaUrl" alt="" />
                     <p class="post-subtitle"> SLUG: @item.Slug"</p>
                     <a href="@Url.Action("Details","BlogPosts", new { slug = item.Slug })" class="btn-group-lg">
-                     VIEW
+                        VIEW
                     </a>
                     <hr />
                 }
             </div>
-            <!-- Blog Sidebar Widgets Column -->
-            <div class="col-md-4">
-                <br /><br /><br />
-                <!-- The Latest contents -->
-                <div class="well">
-                    <h4 style="color: darkred;">Latest Posts</h4>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <ul class="list-unstyled">
-                                @foreach (var item in Model)
-                                {
-                                    <li class="side-title" ><a href="@Url.Action("Details", "BlogPosts", new { slug = item.Slug })">*@item.Title</a></li>
-                                }
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- /.row -->
-                </div>
-
-                <!-- About -->
-                <div class="well">
-                    <h4 style="color: darkred;">About This Blog</h4>
-                    <p>It's a blog that shares content about Gundam, one of the most popular characters in the world.</p>
-                     @Html.ActionLink("About", "About", "Home")
-                </div>
-
-                <!-- Contact -->
-                <div class="well">
-                    <h4 style="color: darkred;">Contact</h4>
-                    <address>
-                        Gundam Story<br />
-                        130 Henlow Bay<br />
-                    </address>
-                    @Html.ActionLink("More Info", "Contact", "Home")
-                </div>
-
-            </div>
         </div>
-        <!-- /.row -->
-        <br /><br />
+        
         <!-- Footer -->
         <footer>
             <div class="row">
                 <div class="col-lg-12">
-                    <p>Copyright &copy; Gundam Story 2018</p>
+                    <h1 style="color: darkgoldenrod">Copyright &copy; <strong>Gundam Story 2018</strong></h1>
                 </div>
             </div>
             <!-- /.row -->

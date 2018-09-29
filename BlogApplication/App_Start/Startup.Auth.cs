@@ -6,6 +6,8 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using BlogApplication.Models;
+using Microsoft.Owin.Security.Facebook;
+using BlogApplication.Facebook;
 
 namespace BlogApplication
 {
@@ -57,12 +59,21 @@ namespace BlogApplication
             //app.UseFacebookAuthentication(
             //   appId: "",
             //   appSecret: "");
+            var facebookOptions = new FacebookAuthenticationOptions()
+            {
+                AppId = "273754210133890",
+                AppSecret = "6d0227c52152c04e06b91de863e4feff",
+                BackchannelHttpHandler = new FacebookBackChannelHandler(),
+                UserInformationEndpoint = "https://graph.facebook.com/v2.4/me?fields=id,email"
+            };
+            facebookOptions.Scope.Add("email");
+            app.UseFacebookAuthentication(facebookOptions);
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = "991505607615-1fl7nvep4tgh589uat1dtv84vsvbcrjp.apps.googleusercontent.com",
+                ClientSecret = "w8VZZtekNDiY0n9OZVVZlOST"
+            });
         }
     }
 }

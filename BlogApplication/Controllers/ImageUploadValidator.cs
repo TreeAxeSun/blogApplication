@@ -4,9 +4,11 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace BlogApplication.Controllers
 {
+   [RequireHttps]
     public static class ImageUploadValidator
     {
         public static bool IsWebFriendlyImage(HttpPostedFileBase file)

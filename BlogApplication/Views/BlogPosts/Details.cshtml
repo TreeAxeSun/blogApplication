@@ -4,7 +4,7 @@
     ViewBag.Title = "Details";
 }
 
-<h2 style="color: goldenrod;">Blog Post</h2>
+<h2 style="color: gold;">Blog Post</h2>
 
 <div style="background-color: azure;">
     <hr />
@@ -77,6 +77,40 @@
         </dd>
     </dl>
 </div>
-<p>
+
+<div>
+    <h4 style="color: gold">Comments:</h4>
+    @foreach (var comment in Model.Comments)
+    {
+    <p style="color: azure">
+        !!! @comment.Body  -- by @comment.Author.DisplayName - @comment.Created.ToString("dd//MM/yyyy HH:mm")<br />
+        @if (User.Identity.IsAuthenticated &&
+        (User.IsInRole("Admin") || User.IsInRole("Moder")))
+        {
+        <span><a style="color: burlywood" href="@Url.Action("Edit", "Comments", new { id = comment.Id })">Edit Comment</a> |
+        <a style="color: burlywood" href="@Url.Action("Delete", "Comments", new { id = comment.Id })">Delete Comment</a></span>
+        }
+    </p>
+    }
+</div>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div style="color: gold">
+        Submit your comment!
+    </div>
+    <div>
+        @using (Html.BeginForm("Details", "BlogPosts", FormMethod.Post))
+        {
+            <input type="hidden" name="slug" value="@Model.Slug" />
+            <textarea name="Body" style="width: 600px"></textarea>
+            if (ViewBag.ErrorMessage != null)
+            {
+                <h5 style="color: yellow">@ViewBag.ErrorMessage</h5>
+            }
+            <input type="submit" value="Submit"/>
+        }
+    </div>
+}
     
-</p>
+

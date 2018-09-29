@@ -38,7 +38,7 @@ namespace BlogApplication.Migrations
                     Email = "veris49@gmail.com",
                     FirstName = "YS",
                     LastName = "Ahn",
-                    DisplayName = "YSA"
+                    DisplayName = "Master"
                 }, "Adminuser@1");
             }
 
